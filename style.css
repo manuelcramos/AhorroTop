@@ -1,0 +1,247 @@
+/* ===============================
+   VARIABLES DE COLOR (OPCIONAL)
+   =============================== */
+:root { /* Definimos variables para colores reutilizables */
+  --bg1: #4facfe;                /* Color 1 del degradado de fondo */
+  --bg2: #00f2fe;                /* Color 2 del degradado de fondo */
+  --text: #333;                  /* Color de texto principal */
+  --subtext: #444;               /* Color de subtítulos */
+  --card: #ffffff;               /* Fondo de la tarjeta principal */
+  --muted: #f9f9f9;              /* Fondo de tarjetas secundarias */
+  --border: #dddddd;             /* Color de borde para inputs */
+  --accent: #4facfe;             /* Color principal (botón, foco) */
+  --accent-hover: #00c6ff;       /* Color del botón al pasar el mouse */
+  --shadow: rgba(0,0,0,0.2);     /* Sombra general */
+}
+
+/* ===============================
+   ESTILOS GENERALES
+   =============================== */
+* { box-sizing: border-box; }     /* Incluye padding/border en el cálculo del ancho/alto */
+
+html, body {                      /* Asegura altura completa para centrar contenido si se desea */
+  height: 100%;                   /* Ocupa el 100% de la altura disponible */
+}
+
+body {                             /* Estilos base del documento */
+  font-family: Arial, sans-serif;  /* Fuente básica, legible y común */
+  background: linear-gradient(to right, var(--bg1), var(--bg2)); /* Fondo degradado vistoso */
+  margin: 0;                       /* Quitamos márgenes por defecto */
+  padding: 0;                      /* Quitamos padding por defecto */
+  display: flex;                   /* Usamos flex para centrar horizontalmente */
+  justify-content: center;         /* Centra la app horizontalmente */
+  align-items: flex-start;         /* Alinea arriba (mejor en móviles con scroll) */
+  min-height: 100vh;               /* Altura mínima de la ventana para cubrir fondo */
+}
+
+/* ===============================
+   CONTENEDOR DE LA APP
+   =============================== */
+.app-container {                   /* Caja principal de la app */
+  max-width: 400px;                /* Ancho máximo para mobile-first */
+  width: 100%;                     /* Ocupa el 100% hasta el máximo */
+  background: var(--card);         /* Fondo blanco para contraste */
+  padding: 20px;                   /* Espaciado interno cómodo */
+  border-radius: 15px;             /* Bordes redondeados suaves */
+  margin: 20px;                    /* Separación del borde de la pantalla */
+  box-shadow: 0 5px 15px var(--shadow); /* Sombra suave para profundidad */
+  animation: fadeIn 300ms ease;    /* Pequeña animación al cargar */
+}
+
+/* ===============================
+   TITULOS
+   =============================== */
+h1 {                               /* Título principal */
+  text-align: center;              /* Centrado */
+  color: var(--text);              /* Color del texto principal */
+  margin: 0 0 10px;                /* Espacio inferior */
+}
+
+h2 {                               /* Subtítulos de secciones */
+  margin: 0 0 10px;                /* Espacio inferior para separar del contenido */
+  color: var(--subtext);           /* Color ligeramente más suave */
+  font-size: 18px;                 /* Tamaño legible en móvil */
+}
+
+/* ===============================
+   TARJETAS / CARDS
+   =============================== */
+.card {                            /* Contenedores de cada bloque */
+  background: var(--muted);        /* Fondo gris muy claro */
+  border-radius: 10px;             /* Bordes redondeados */
+  padding: 15px;                   /* Espaciado interno */
+  margin-bottom: 15px;             /* Separación entre tarjetas */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08); /* Sombra muy suave */
+}
+
+/* ===============================
+   FORMULARIOS (INPUTS/BOTONES)
+   =============================== */
+input {                            /* Campos de texto y número */
+  width: 100%;                     /* Ocupan todo el ancho disponible */
+  padding: 10px;                   /* Espaciado interno para comodidad */
+  margin-bottom: 8px;              /* Separación entre inputs */
+  border: 1px solid var(--border); /* Borde gris claro */
+  border-radius: 8px;              /* Bordes redondeados */
+  font-size: 16px;                 /* Tamaño de texto legible */
+  outline: none;                   /* Quitamos el contorno por defecto */
+  transition: border-color 150ms ease, box-shadow 150ms ease; /* Transición suave de foco */
+}
+
+input:focus {                      /* Estilo cuando el input tiene foco */
+  border-color: var(--accent);     /* Resalta con el color principal */
+  box-shadow: 0 0 0 3px rgba(79,172,254,0.2); /* Halo suave para accesibilidad */
+}
+
+button {                           /* Botón principal (añadir gasto, etc.) */
+  width: 100%;                     /* Ocupa el ancho completo */
+  padding: 10px;                   /* Espaciado interno */
+  background: var(--accent);       /* Color principal del botón */
+  color: #ffffff;                  /* Texto blanco para contraste */
+  border: none;                    /* Sin borde */
+  border-radius: 8px;              /* Bordes redondeados */
+  font-size: 16px;                 /* Tamaño de texto legible */
+  cursor: pointer;                 /* Cursor de mano al pasar */
+  transition: background 150ms ease, transform 80ms ease; /* Animaciones sutiles */
+}
+
+button:hover {                     /* Efecto al pasar el ratón */
+  background: var(--accent-hover); /* Cambia a un tono más brillante */
+}
+
+button:active {                    /* Efecto al hacer clic */
+  transform: translateY(1px);      /* Pequeño desplazamiento para feedback táctil */
+}
+
+button:disabled {                  /* Estado deshabilitado si lo usas en el futuro */
+  opacity: 0.6;                    /* Apariencia atenuada */
+  cursor: not-allowed;             /* Cursor no permitido */
+}
+
+/* ===============================
+   LISTA DE GASTOS
+   =============================== */
+ul {                               /* Contenedor de la lista de gastos */
+  list-style: none;                /* Quitamos viñetas */
+  padding: 0;                      /* Sin padding por defecto */
+  margin: 0;                       /* Sin margen por defecto */
+}
+
+li {                               /* Cada gasto de la lista */
+  background: #eeeeee;             /* Fondo gris medio */
+  margin: 5px 0;                   /* Separación vertical entre items */
+  padding: 8px 10px;               /* Espaciado interno */
+  border-radius: 6px;              /* Bordes redondeados */
+  display: flex;                   /* Flex para alinear contenido y botón borrar */
+  align-items: center;             /* Centra verticalmente */
+  justify-content: space-between;  /* Texto a la izquierda, acciones a la derecha */
+  gap: 10px;                       /* Espacio entre elementos internos */
+}
+
+/* Botón pequeño dentro del li (por si añades el ❌ desde JS) */
+li button {                         /* Estilo del botón de borrado dentro del item */
+  width: auto;                     /* Tamaño automático (no 100%) */
+  padding: 6px 10px;               /* Más pequeño que el botón principal */
+  border-radius: 6px;              /* Bordes redondeados suaves */
+  font-size: 14px;                 /* Texto un poco más pequeño */
+  background: #ff5c5c;             /* Rojo suave para indicar eliminar */
+}
+
+li button:hover {                   /* Hover del botón de borrado */
+  background: #ff3b3b;             /* Rojo un poco más intenso */
+}
+
+/* Texto dentro del li (si deseas estilos distintos para la cifra) */
+li span.monto {                     /* Clase opcional para resaltar montos */
+  font-weight: 600;                /* Semi-negrita */
+}
+
+/* ===============================
+   RESUMEN
+   =============================== */
+.resumen p {                        /* Líneas del bloque Resumen */
+  display: flex;                    /* Para alinear etiqueta y cifra */
+  align-items: center;              /* Centrado vertical */
+  justify-content: space-between;   /* Texto a izq., cantidad a dcha. */
+  margin: 6px 0;                   /* Separación vertical */
+}
+
+.resumen span {                     /* Cifras dentro del resumen */
+  font-weight: 700;                 /* Negrita para destacar */
+}
+
+/* Si quieres diferenciar el ahorro cuando es negativo (desde JS podrías añadir una clase) */
+.negativo {                         /* Clase utilitaria para números en negativo */
+  color: #c62828;                   /* Rojo oscuro de alerta */
+}
+
+/* ===============================
+   GRÁFICO
+   =============================== */
+canvas {                            /* Lienzo del gráfico (Chart.js) */
+  width: 100% !important;           /* Que adapte el ancho al contenedor */
+  height: auto !important;          /* Mantiene proporciones en responsive */
+  display: block;                   /* Evita espacios raros en inline elements */
+}
+
+/* ===============================
+   ACCESIBILIDAD Y UTILIDADES
+   =============================== */
+:focus-visible {                    /* Estilo general para foco accesible con teclado */
+  outline: 3px solid rgba(79,172,254,0.5); /* Resalta elementos navegados por teclado */
+  outline-offset: 2px;              /* Separación del contorno */
+}
+
+.visually-hidden {                  /* Clase para contenido solo para lectores de pantalla */
+  position: absolute;               /* Lo saca del flujo normal */
+  width: 1px;                       /* Tamaño mínimo */
+  height: 1px;                      /* Tamaño mínimo */
+  padding: 0;                       /* Sin padding */
+  margin: -1px;                     /* Lo aparta visualmente */
+  overflow: hidden;                 /* Oculta excedente */
+  clip: rect(0,0,1px,1px);          /* Recorta visualmente */
+  white-space: nowrap;              /* Mantiene en una línea */
+  border: 0;                        /* Sin borde */
+}
+
+/* ===============================
+   RESPONSIVE (ajustes finos)
+   =============================== */
+@media (max-width: 380px) {         /* Pantallas muy pequeñas */
+  .app-container {                  /* Ajustes para contenedor */
+    padding: 16px;                  /* Un poco menos de padding */
+    margin: 12px;                   /* Menos margen exterior */
+  }
+  h1 {                              /* Título principal más compacto */
+    font-size: 20px;                /* Reduce tamaño para caber mejor */
+  }
+  h2 {                              /* Subtítulos más compactos */
+    font-size: 16px;                /* Reduce tamaño */
+  }
+}
+
+/* ===============================
+   ANIMACIONES
+   =============================== */
+@keyframes fadeIn {                 /* Animación de entrada suave */
+  from { opacity: 0; transform: translateY(4px); } /* Inicio transparente y ligeramente abajo */
+  to   { opacity: 1; transform: translateY(0); }    /* Final visible y en su sitio */
+}
+
+/* Total gastos: siempre rojo suave */
+#gastos-total {
+  color: #d32f2f;  /* rojo suave */
+  font-weight: 600;
+}
+
+/* Ahorro positivo: verde */
+.positivo {
+  color: #388e3c; /* verde */
+  font-weight: 700;
+}
+
+/* Ahorro negativo: rojo oscuro */
+.negativo {
+  color: #c62828; /* rojo intenso */
+  font-weight: 700;
+}
