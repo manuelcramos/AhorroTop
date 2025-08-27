@@ -1,63 +1,71 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"> <!-- Definimos la codificación -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ajuste para móviles -->
-  <title>Mi App de Ahorro</title>
-
-  <!-- Vinculamos el CSS externo -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App de Ahorro</title>
   <link rel="stylesheet" href="style.css">
-
-  <!-- Librería Chart.js desde CDN (necesaria para los gráficos) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="app-container">
-    <h1>💰 Mi App de Ahorro</h1>
-    
-    <!-- Sección para ingresar el sueldo -->
+
+    <h1>💰 Mi Ahorro</h1>
+
+    <!-- ===============================
+         Añadir ingresos
+    =============================== -->
     <div class="card">
-      <h2>Ingresos mensuales</h2>
-      <!-- Input donde el usuario escribe cuánto gana al mes -->
-      <input type="number" id="ingresos" placeholder="Ej: 1200 €">
+      <h2>➕ Añadir ingresos</h2>
+      <input type="number" id="ingresos" placeholder="Ingresos (€)" min="0">
     </div>
 
-    <!-- Sección para añadir gastos -->
+    <!-- ===============================
+         Añadir gasto
+    =============================== -->
     <div class="card">
-      <h2>Añadir gasto</h2>
-      <!-- Input para la categoría del gasto -->
-      <input type="text" id="categoria" placeholder="Ej: Comida">
-      <!-- Input para la cantidad del gasto -->
-      <input type="number" id="cantidad" placeholder="Cantidad (€)">
-      <!-- Botón que llama a la función agregarGasto() en script.js -->
-      <button onclick="agregarGasto()">➕ Añadir gasto</button>
+      <h2>➖ Añadir gasto</h2>
+      <form id="form-gasto">
+        <input type="text" id="categoria" placeholder="Categoría" required>
+        <input type="number" id="cantidad" placeholder="Cantidad (€)" min="0" required>
+        <button type="submit">Añadir gasto</button>
+      </form>
     </div>
 
-    <!-- Lista de gastos añadidos -->
+    <!-- ===============================
+         Lista de gastos
+    =============================== -->
     <div class="card">
-      <h2>Mis gastos</h2>
-      <!-- Aquí se mostrarán los gastos en una lista -->
+      <h2>📋 Gastos</h2>
       <ul id="listaGastos"></ul>
     </div>
 
-    <!-- Resumen de gastos y ahorro -->
-    <div class="card resumen">
-      <h2>Resumen</h2>
-      <!-- Total de gastos calculados -->
-      <p>💸 Total gastos: <span id="totalGastos">0</span> €</p>
-      <!-- Ahorro posible = ingresos - gastos -->
-      <p>💰 Ahorro posible: <span id="ahorro">0</span> €</p>
+    <!-- ===============================
+         Resumen total del mes
+    =============================== -->
+    <div class="card total">
+      <h2>🧮 Total del mes</h2>
+      <p>Ingresos: <span id="resIngresos" class="metric">0</span> €</p>
+      <p>Gastos: <span id="resGastos" class="metric">0</span> €</p>
+      <p>Resultado:
+        <span id="resResultado" class="metric">0</span> €
+        <span id="resEtiqueta" class="badge">—</span>
+      </p>
     </div>
 
-    <!-- Gráfico circular de gastos -->
+    <!-- ===============================
+         Gráfico de gastos
+    =============================== -->
     <div class="card">
-      <h2>📊 Gráfico de gastos</h2>
-      <!-- Aquí Chart.js dibujará el gráfico -->
+      <h2>📊 Distribución de gastos</h2>
       <canvas id="graficoGastos"></canvas>
     </div>
+
   </div>
 
-  <!-- Vinculamos el archivo de lógica en JS -->
+  <!-- ===============================
+       Script principal
+  =============================== -->
   <script src="script.js"></script>
 </body>
 </html>
