@@ -3,8 +3,15 @@
    ============================================================ */
 
 // ================== VARIABLES ==================
-let gastos = [];    // Array para guardar gastos
-let ingresos = 0;   // Variable de ingresos
+
+// Array para guardar todos los gastos con fecha
+let gastos = [];    
+
+// Variable de ingresos totales
+let ingresos = 0;   
+
+// Periodo activo (semana, mes, año)
+let periodoActivo = "mes"; 
 
 // Formato de moneda en euros
 const fmtEUR = new Intl.NumberFormat("es-ES", {
@@ -19,13 +26,18 @@ const ingresosInput = document.getElementById("ingresos");
 const categoriaInput = document.getElementById("categoria");
 const cantidadInput = document.getElementById("cantidad");
 
+// Resultados resumen
 const resIngresos = document.getElementById("resIngresos");
 const resGastos = document.getElementById("resGastos");
 const resResultado = document.getElementById("resResultado");
 const resEtiqueta = document.getElementById("resEtiqueta");
-const ahorroEl = document.getElementById("resResultado");
 
-// Gráfico
+// Botones periodo
+const btnSemana = document.getElementById("btn-semana");
+const btnMes = document.getElementById("btn-mes");
+const btnAno = document.getElementById("btn-ano");
+
+// Gráfico Chart.js
 const ctx = document.getElementById("graficoGastos").getContext("2d");
 const baseColors = ["#ff6384","#36a2eb","#ffce56","#4bc0c0","#9966ff","#ff9f40","#8bc34a","#e91e63"];
 let grafico = new Chart(ctx, {
@@ -36,7 +48,7 @@ let grafico = new Chart(ctx, {
 
 // ================== FUNCIONES ==================
 
-// Normaliza categoría (primera letra mayúscula)
+// Normaliza categoría (Primera letra mayúscula)
 function normalizarCategoria(texto) {
   const t = (texto || "").toString().trim();
   if (!t) return "Sin categoría";
@@ -54,9 +66,34 @@ function getColors(n) {
   return baseColors.concat(extra);
 }
 
+// ================== FILTRADO POR PERIODO ==================
+
+// Devuelve gastos filtrados según periodoActivo
+function filtrarGastos() {
+  const ahora = new Date();
+  return gastos.filter(g => {
+    const gastoFecha = new Date(g.fecha);
+    if (periodoActivo === "semana") {
+      // Gastos últimos 7 días
+      const difDias = (ahora - gastoFecha)/(1000*60*60*24);
+      return difDias <= 7;
+    } else if (periodoActivo === "mes") {
+      // Mismo mes y año
+      return gastoFecha.getMonth() === ahora.getMonth() &&
+             gastoFecha.getFullYear() === ahora.getFullYear();
+    } else if (periodoActivo === "ano") {
+      // Mismo año
+      return gastoFecha.getFullYear() === ahora.getFullYear();
+    }
+    return true; // fallback
+  });
+}
+
+// ================== GESTIÓN DE GASTOS ==================
+
 // Agregar gasto
 function agregarGasto(e) {
-  if (e) e.preventDefault(); // Prevenir submit
+  if (e) e.preventDefault(); // Prevenir submit del formulario
   const categoria = normalizarCategoria(categoriaInput.value);
   const cantidad = parseFloat(cantidadInput.value);
 
@@ -65,26 +102,33 @@ function agregarGasto(e) {
     return;
   }
 
-  gastos.push({categoria, cantidad});
+  // Guardar gasto con fecha actual
+  gastos.push({categoria, cantidad, fecha: new Date().toISOString()});
 
+  // Limpiar inputs
   categoriaInput.value = "";
   cantidadInput.value = "";
 
+  // Actualizar interfaz
   actualizarUICompleta();
 }
 
-// Eliminar gasto
+// Eliminar gasto por índice
 function eliminarGasto(index){
   gastos.splice(index,1);
   actualizarUICompleta();
 }
 
-// Mostrar lista de gastos
+// ================== ACTUALIZACIÓN DE UI ==================
+
+// Mostrar lista de gastos filtrada
 function mostrarGastos(){
   if (!listaGastos) return;
   listaGastos.innerHTML = "";
 
-  gastos.forEach((gasto,index)=>{
+  const filtrados = filtrarGastos();
+
+  filtrados.forEach((gasto,index)=>{
     const li = document.createElement("li");
     const texto = document.createElement("span");
     texto.textContent = `${gasto.categoria}: ${fmtEUR.format(gasto.cantidad)}`;
@@ -102,8 +146,9 @@ function mostrarGastos(){
 
 // Actualizar gráfico
 function actualizarGrafico(){
+  const filtrados = filtrarGastos();
   const agregados = {};
-  gastos.forEach(g=> agregados[g.categoria]=(agregados[g.categoria]||0)+g.cantidad);
+  filtrados.forEach(g => agregados[g.categoria] = (agregados[g.categoria]||0)+g.cantidad);
 
   const labels = Object.keys(agregados);
   const data = Object.values(agregados);
@@ -116,9 +161,11 @@ function actualizarGrafico(){
 
 // Actualizar resumen
 function actualizarResumen(){
-  const totalGastos = gastos.reduce((sum,g)=> sum+g.cantidad,0);
+  const filtrados = filtrarGastos();
+  const totalGastos = filtrados.reduce((sum,g)=> sum+g.cantidad,0);
   const ahorro = ingresos - totalGastos;
 
+  // Mostrar resultados
   resIngresos.textContent = ingresos.toFixed(2);
   resGastos.textContent = totalGastos.toFixed(2);
   resResultado.textContent = ahorro.toFixed(2);
@@ -139,7 +186,7 @@ function actualizarResumen(){
   }
 }
 
-// Actualiza toda la UI
+// Actualiza toda la UI (lista, resumen y gráfico)
 function actualizarUICompleta(){
   mostrarGastos();
   actualizarResumen();
@@ -156,4 +203,24 @@ ingresosInput.addEventListener("input", ()=> {
 
 // Formulario añadir gasto
 document.getElementById("form-gasto").addEventListener("submit", agregarGasto);
+
+// Cambiar periodo
+btnSemana.addEventListener("click", ()=> cambiarPeriodo("semana"));
+btnMes.addEventListener("click", ()=> cambiarPeriodo("mes"));
+btnAno.addEventListener("click", ()=> cambiarPeriodo("ano"));
+
+// Función para cambiar periodo y actualizar UI
+function cambiarPeriodo(periodo){
+  periodoActivo = periodo;
+  // Actualizar botón activo visualmente
+  [btnSemana,btnMes,btnAno].forEach(b => b.classList.remove("active"));
+  if(periodo==="semana") btnSemana.classList.add("active");
+  else if(periodo==="mes") btnMes.classList.add("active");
+  else if(periodo==="ano") btnAno.classList.add("active");
+
+  actualizarUICompleta();
+}
+
+// ================== INICIALIZACIÓN ==================
+cambiarPeriodo("mes"); // Por defecto muestra el mes actual
 
